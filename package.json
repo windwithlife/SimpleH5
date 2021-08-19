@@ -1,0 +1,33 @@
+{
+  "name": "next-test",
+  "version": "1.0.0",
+  "description": "koa2 + nextjs 11",
+  "main": "app.js",
+  "author": "r_gao@trip.com",
+  "license": "ISC",
+  "scripts": {
+    "dev": "cross-env APP_ENV=DEV node server",
+    "uat": "cross-env APP_ENV=UAT node server",
+    "prod": "cross-env APP_ENV=PROD node server",
+    "build": "next build",
+    "analyze": "cross-env ANALYZE=true next build"
+  },
+  "dependencies": {
+    "antd": "^4.3.0",
+    "next": "^11.1.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "@koa/router": "^10.1.0",
+    "cross-env": "^7.0.3",
+    "koa": "^2.9.0",
+    "koa-compress": "^5.0.1",
+    "koa-helmet": "^6.1.0",
+    "koa-static": "^5.0.0",
+    "babel-plugin-import": "^1.13.3",
+    "next-compose-plugins": "^2.2.1",
+    "log4js": "^6.3.0"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^11.1.0"
+  }
+}
