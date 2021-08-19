@@ -6,6 +6,7 @@ const helmet = require('koa-helmet');
 const next = require('next');
 
 const dev = process.env.APP_ENV == 'DEV' ? true : false;
+const port = process.env.PORT || 3000;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
@@ -52,7 +53,7 @@ app.prepare().then(() => {
             await handle(ctx.req, ctx.res)
             ctx.response = false
         })
-        .listen(3000, () => {
-            logger.info('server is running at http://localhost:3000')
+        .listen(port, () => {
+            logger.info(`server is running at http://localhost:${port}`)
         });
 });

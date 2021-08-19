@@ -6,7 +6,7 @@
   "author": "r_gao@trip.com",
   "license": "ISC",
   "scripts": {
-    "dev": "cross-env APP_ENV=DEV node server",
+    "dev": "cross-env APP_ENV=DEV PORT=5000 node server",
     "uat": "cross-env APP_ENV=UAT node server",
     "prod": "cross-env APP_ENV=PROD node server",
     "build": "next build",
