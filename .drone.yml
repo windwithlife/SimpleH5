@@ -1,0 +1,117 @@
+kind: pipeline
+type: docker
+name: simple-h5-PROD
+
+steps:
+  - name: 编译打包代码
+    image: node:12.19.0-alpine
+    volumes:
+      - name : mvncache
+        path : /root/.m2
+    commands:
+      - echo 'this is a H5 website'
+      - cd  ./
+      - npm install
+      - npm run build
+      - rm -rf ./node_modules
+      - npm install --production
+
+  - name: 构建镜像&PUSH镜像到Hub（PROD）.
+    image: plugins/docker
+    settings:
+      dockerfile: ./release/prod/Dockerfile
+      use_cache: true
+      repo: ccr.ccs.tencentyun.com/windwithlife/simple-h5
+      registry: https://ccr.ccs.tencentyun.com
+      mirror: https://89cgb0wn.mirror.aliyuncs.com
+      username: 100008098144
+      password: password7&
+      # 更多变量参考https://docs.drone.io/pipeline/environment/reference/
+      tags:
+        - ${DRONE_TAG=latest}
+        - build-${DRONE_BUILD_NUMBER}      
+
+  - name: 部署到K3s集群(PROD)
+    image: bh90210/dron8s:latest
+    settings:
+      yaml: ./release/prod/deployment.yaml
+      kubeconfig:
+        from_secret: kubeconfig
+      app_name: simple-h5
+      image_name: ccr.ccs.tencentyun.com/windwithlife/simple-h5
+      soa_gateway: www.koudaibook.com
+      soa_gateway_cert: api-koudaibook-cert
+      soa_path: /simple-h5
+      build_tag: build-${DRONE_BUILD_NUMBER}
+
+
+volumes:
+  - name: mvncache
+    host:
+      path: /var/lib/cache/.m2
+
+trigger:
+  branch:
+    - master
+  event:
+    - push
+
+---
+kind: pipeline
+type: docker
+name: account-web-UAT
+
+steps:
+  - name: 编译打包代码
+    image: node:12.19.0-alpine
+    volumes:
+      - name : mvncache
+        path : /root/.m2
+    commands:
+      - echo 'test echo'
+      - cd  ./
+      - npm install
+      - npm run build
+      - rm -rf ./node_modules
+      - npm install --production
+
+  - name: 构建镜像&PUSH镜像到Hub(UAT).
+    image: plugins/docker
+    settings:
+      dockerfile: ./release/prod/Dockerfile
+      use_cache: true
+      repo: ccr.ccs.tencentyun.com/windwithlife/simple-h5
+      registry: https://ccr.ccs.tencentyun.com/
+      mirror: https://89cgb0wn.mirror.aliyuncs.com
+      username: 100008098144
+      password: password7&
+      # 更多变量参考https://docs.drone.io/pipeline/environment/reference/
+      tags:
+        - ${DRONE_TAG=latest}
+        - build-${DRONE_BUILD_NUMBER}
+
+  - name: 部署到K3S集群-(UAT)
+    image: bh90210/dron8s:latest
+    settings:
+      yaml: ./release/prod/deployment.yaml
+      kubeconfig:
+        from_secret: kubeconfig
+      app_name: simple-h5
+      image_name: ccr.ccs.tencentyun.com/windwithlife/simple-h5
+      soa_gateway: www.zhangyongqiao.com
+      soa_gateway_cert: api-koudaibook-cert
+      soa_path: /simple-h5
+      build_tag: build-${DRONE_BUILD_NUMBER}
+
+volumes:
+  - name: mvncache
+    host:
+      path: /var/lib/cache/.m2
+
+trigger:
+  branch:
+    - uat
+  event:
+    - push
+
+
