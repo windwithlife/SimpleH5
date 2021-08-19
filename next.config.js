@@ -8,6 +8,7 @@ module.exports = withPlugins(
         [withBundleAnalyzer]
     ],
     {
+        basePath: '/simple-h5',
         webpack: (config, options) => {
             return config;
         }
