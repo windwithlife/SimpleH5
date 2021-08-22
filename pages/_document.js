@@ -16,8 +16,10 @@ class CustomDocument extends Document {
     render() {
         return (
             <Html>
-                <Head />
-                <body>
+                <Head>
+                    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+                </Head>
+                <body id='body'>
                     <Main />
                     <NextScript />
                 </body>

@@ -16,14 +16,21 @@ app.prepare().then(() => {
     const server = new Koa();
     const router = new Router();
     // 路由配置
-    router.get('/home', async (ctx, next) => {
-        // koa2默认返回状态码为404，此处特别设置
-        ctx.response.status = 200
-        // 开启压缩
-        ctx.compress = true;
-        await app.render(ctx.req, ctx.res, '/home', ctx.query);
-        ctx.response = false;
-    });
+    router
+        .get('/home', async (ctx, next) => {
+            // koa2默认返回状态码为404，此处特别设置
+            ctx.response.status = 200
+            // 开启压缩
+            ctx.compress = true;
+            await app.render(ctx.req, ctx.res, '/home', ctx.query);
+            ctx.response = false;
+        })
+        .get('/login', async (ctx, next) => {
+            ctx.response.status = 200
+            ctx.compress = true;
+            await app.render(ctx.req, ctx.res, '/login', ctx.query);
+            ctx.response = false;
+        })
 
     server
         .use(
