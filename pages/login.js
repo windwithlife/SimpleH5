@@ -13,7 +13,8 @@ import {
   InputAdornment,
   FormControl,
   Radio,
-  Button
+  Button,
+  ButtonGroup
 } from '@material-ui/core'
 
 import {
@@ -120,6 +121,10 @@ export default function Login(props) {
       setRulesError(1);
     }
   }
+  // 处理注册按钮点击
+  const handleSignupClick = () => {
+    window.open(`${window.location.origin}/signup`)
+  }
   
   return (
     <div className={ styles.loginPage }>
@@ -171,7 +176,10 @@ export default function Login(props) {
           />
         </FormControl>
         <div className={ styles.loginButtonGroup }>
-          <Button variant="contained" color="primary" onClick={ handleSubmitClick }>登录</Button>
+          <ButtonGroup disableElevation variant="contained" color="primary" aria-label="contained primary button group">
+            <Button onClick={ handleSubmitClick }>登录</Button>
+            <Button onClick={ handleSignupClick }>注册</Button>
+          </ButtonGroup>
           <Button color="primary">忘记密码？</Button>
         </div>
         <div className={ styles.loginRulesCheck }>
