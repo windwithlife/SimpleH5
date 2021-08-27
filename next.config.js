@@ -17,7 +17,8 @@ module.exports = withPlugins(
                 resolve: {
                     alias: {
                         '@styles': resolve('./styles'),
-                        '@components': resolve('./components')
+                        '@components': resolve('./components'),
+                        '@utils': resolve('./utils')
                     }
                 },
             })

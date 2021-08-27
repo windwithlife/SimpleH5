@@ -12,7 +12,6 @@ import {
   InputLabel,
   InputAdornment,
   FormControl,
-  Radio,
   Button,
   ButtonGroup
 } from '@material-ui/core'
@@ -21,11 +20,11 @@ import {
   Visibility,
   VisibilityOff
 } from '@material-ui/icons'
-
-import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { useSnackbar } from 'notistack';
 
 import { makeStyles } from '@material-ui/core/styles'
+
+import fetch from '@utils/network'
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
   loginPage: {
@@ -49,27 +48,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between'
-  },
-  loginRulesCheck: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20
-  },
-  loginRulesRadio: {
-    padding: 0,
-    marginRight: 2
-  },
-  loginRulesCheckIcon: {
-    fontSize: 14,
-  },
-  loginRulesCheckText: {
-    fontSize: 10,
-    color: theme.palette.primary.main
-  },
-  loginRulesCheckTextError: {
-    fontSize: 10,
-    color: theme.palette.error.main
   }
 }));
 
@@ -85,8 +63,8 @@ export default function Login(props) {
   // 错误状态展示
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
-  // 0: 初始 1: 错误 2: 正确
-  const [rulesError, setRulesError] = useState(0);
+  // 消息队列
+  const { enqueueSnackbar } = useSnackbar();
   // 处理用户名输入
   const handleUsernameChange = (prop) => (event) => {
     setUsernameError(false);
@@ -101,29 +79,40 @@ export default function Login(props) {
   const handleClickShowPassword = () => {
     setPassword({ ...password, showPassword: !password.showPassword });
   };
-  // 处理规则点击
-  const handleRulesClick = (event) => {
-    if (event.target.checked) {
-      setRulesError(2);
-    }
-  }
   // 处理登录按钮点击
   const handleSubmitClick = () => {
     if (!username.trim()) {
+      enqueueSnackbar('请填写正确的用户名或手机号', { variant: 'error' })
       setUsernameError(true);
     }
 
     if (!password?.password.trim()) {
+      enqueueSnackbar('请输入有效的密码', { variant: 'error' })
       setPasswordError(true);
     }
 
-    if (rulesError === 0) {
-      setRulesError(1);
+    if (
+      !usernameError &&
+      !passwordError
+    ) {
+      fetch({
+        url: 'https://api.koudaibook.com/account-service/account/login',
+        data: {
+          username: username,
+          password: password.password
+        }
+      }).then((result) => {
+        if (result?.status?.code == 200) {
+          enqueueSnackbar('用户登录成功', { variant: 'success' })
+        }
+      }).catch((error) => {
+        enqueueSnackbar('用户登录失败', { variant: 'error' })
+      })
     }
   }
   // 处理注册按钮点击
   const handleSignupClick = () => {
-    window.open(`${window.location.origin}/signup`)
+    window.location.href = `${window.location.origin}/signup`;
   }
   
   return (
@@ -136,13 +125,13 @@ export default function Login(props) {
           error={ usernameError }
           className={ styles.loginUserInput }
         >
-          <InputLabel htmlFor="outlined-adornment-username">用户名/手机号/昵称</InputLabel>
+          <InputLabel htmlFor="outlined-adornment-username">用户名/手机号</InputLabel>
           <OutlinedInput
             id="outlined-adornment-username"
             type='text'
             value={ username }
             onChange={ handleUsernameChange('username') }
-            labelWidth={ 150 }
+            labelWidth={ 110 }
             autoComplete="off"
           />
         </FormControl>
@@ -181,25 +170,6 @@ export default function Login(props) {
             <Button onClick={ handleSignupClick }>注册</Button>
           </ButtonGroup>
           <Button color="primary">忘记密码？</Button>
-        </div>
-        <div className={ styles.loginRulesCheck }>
-          <Radio 
-            color="primary"
-            required={true}
-            className={ styles.loginRulesRadio }
-            onChange={ handleRulesClick }
-            icon={
-              <RadioButtonUncheckedIcon 
-                className={ styles.loginRulesCheckIcon }
-              />
-            }
-            checkedIcon={
-              <CheckCircleIcon 
-                className={ styles.loginRulesCheckIcon }
-              />
-            }
-          />
-          <div className={ rulesError !== 1 ? styles.loginRulesCheckText : styles.loginRulesCheckTextError }>请您仔细阅读相关细则</div>
         </div>
       </div>
     </div>
