@@ -23,6 +23,7 @@ import {
 
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useSnackbar } from 'notistack';
 
 import { makeStyles } from '@material-ui/core/styles'
@@ -30,6 +31,23 @@ import { makeStyles } from '@material-ui/core/styles'
 import fetch from '@utils/network'
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
+  signupHeader: {
+    position: 'absolute',
+    top: 20,
+    width: '100%',
+    height: 44,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  signupHeaderIcon: {
+    color: theme.palette.primary.light,
+  },
+  signupHeaderTitle: {
+    color: theme.palette.primary.light,
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
   signupPage: {
     width: '100%',
     height: '100%',
@@ -92,7 +110,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function signup(props) {
+export default function Signup(props) {
   const styles = useStyles();
   // 用户名
   const [username, setUsername] = useState('')
@@ -120,6 +138,10 @@ export default function signup(props) {
   const [rulesError, setRulesError] = useState(0);
   // 消息队列
   const { enqueueSnackbar } = useSnackbar();
+  // 处理页面返回
+  const handlePageBack = () => {
+    window.history.back();
+  }
   // 处理用户名输入
   const handleUsernameChange = (prop) => (event) => {
     setUsernameError(false);
@@ -209,7 +231,16 @@ export default function signup(props) {
         }
       }).then((result) => {
         if (result?.status?.code == 200) {
-          enqueueSnackbar('注册新用户成功', { variant: 'success' })
+          enqueueSnackbar('注册新用户成功', 
+            { 
+              variant: 'success',
+              onExited: () => {
+                // 注册成功 跳转到登录页面重新登录
+                window.location.href = `${window.location.origin}/login`;
+              }
+            })
+        } else {
+          enqueueSnackbar('注册新用户失败', { variant: 'error' })
         }
       }).catch((error) => {
         enqueueSnackbar('注册信息失败', { variant: 'error' })
@@ -219,6 +250,15 @@ export default function signup(props) {
   
   return (
     <div className={ styles.signupPage } >
+      <div className={ styles.signupHeader }>
+        <IconButton 
+          aria-label="back" 
+          className={ styles.signupHeaderIcon } 
+          onClick={ handlePageBack }> 
+          <ArrowBackIcon />
+        </IconButton>
+        <span className={ styles.signupHeaderTitle }>请注册一个新用户</span>
+      </div>
       <div className={ styles.signupContainer }>
         {/* 用户名输入 */}
         <FormControl 

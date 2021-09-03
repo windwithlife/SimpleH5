@@ -17,7 +17,7 @@ export default function fetch(param) {
             // 超时时间
             timeout: 3000,
             // 跨区请求是否需要凭证
-            withCredentials: false,
+            withCredentials: true,
             // 指定头
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

@@ -22,11 +22,30 @@ import {
 } from '@material-ui/icons'
 import { useSnackbar } from 'notistack';
 
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+
 import { makeStyles } from '@material-ui/core/styles'
 
 import fetch from '@utils/network'
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
+  loginHeader: {
+    position: 'absolute',
+    top: 20,
+    width: '100%',
+    height: 44,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  loginHeaderIcon: {
+    color: theme.palette.primary.light,
+  },
+  loginHeaderTitle: {
+    color: theme.palette.primary.light,
+    fontSize: 20,
+    fontWeight: 'bold'
+  },
   loginPage: {
     width: '100%',
     height: '100%',
@@ -65,6 +84,10 @@ export default function Login(props) {
   const [passwordError, setPasswordError] = useState(false);
   // 消息队列
   const { enqueueSnackbar } = useSnackbar();
+  // 处理页面返回
+  const handlePageBack = () => {
+    window.history.back();
+  }
   // 处理用户名输入
   const handleUsernameChange = (prop) => (event) => {
     setUsernameError(false);
@@ -104,6 +127,8 @@ export default function Login(props) {
       }).then((result) => {
         if (result?.status?.code == 200) {
           enqueueSnackbar('用户登录成功', { variant: 'success' })
+        } else {
+          enqueueSnackbar('用户登录失败', { variant: 'error' })
         }
       }).catch((error) => {
         enqueueSnackbar('用户登录失败', { variant: 'error' })
@@ -117,6 +142,15 @@ export default function Login(props) {
   
   return (
     <div className={ styles.loginPage }>
+      <div className={ styles.loginHeader }>
+        <IconButton 
+          aria-label="back" 
+          className={ styles.loginHeaderIcon } 
+          onClick={ handlePageBack }> 
+          <ArrowBackIcon />
+        </IconButton>
+        <span className={ styles.loginHeaderTitle }>请登录您的账户</span>
+      </div>
       <div className={ styles.loginContainer }>
         <FormControl 
           fullWidth={ true } 
