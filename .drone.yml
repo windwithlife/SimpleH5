@@ -19,7 +19,7 @@ steps:
   - name: 构建镜像&PUSH镜像到Hub（PROD）.
     image: plugins/docker
     settings:
-      dockerfile: ./release/prod/Dockerfile
+      dockerfile: ./release/Dockerfile
       use_cache: true
       repo: ccr.ccs.tencentyun.com/windwithlife/simple-h5
       registry: https://ccr.ccs.tencentyun.com
@@ -34,14 +34,14 @@ steps:
   - name: 部署到K3s集群(PROD)
     image: bh90210/dron8s:latest
     settings:
-      yaml: ./release/prod/deployment.yaml
+      yaml: ./release/deployment.yaml
       kubeconfig:
-        from_secret: kubeconfig
+        from_secret: kubeconfig-prod
       app_name: simple-h5
       image_name: ccr.ccs.tencentyun.com/windwithlife/simple-h5
-      soa_gateway: www.koudaibook.com
-      soa_gateway_cert: api-koudaibook-cert
-      soa_path: /simple-h5
+      soa_gateway: www.zhangyongqiao.com
+      soa_gateway_cert: www-default-secret
+      path_name: /simple-h5
       build_tag: build-${DRONE_BUILD_NUMBER}
 
 
@@ -78,7 +78,7 @@ steps:
   - name: 构建镜像&PUSH镜像到Hub(UAT).
     image: plugins/docker
     settings:
-      dockerfile: ./release/prod/Dockerfile
+      dockerfile: ./release/Dockerfile
       use_cache: true
       repo: ccr.ccs.tencentyun.com/windwithlife/simple-h5
       registry: https://ccr.ccs.tencentyun.com/
@@ -93,13 +93,13 @@ steps:
   - name: 部署到K3S集群-(UAT)
     image: bh90210/dron8s:latest
     settings:
-      yaml: ./release/prod/deployment.yaml
+      yaml: ./release/deployment.yaml
       kubeconfig:
-        from_secret: kubeconfig
+        from_secret: kubeconfig-uat
       app_name: simple-h5
       image_name: ccr.ccs.tencentyun.com/windwithlife/simple-h5
-      soa_gateway: www.zhangyongqiao.com
-      soa_gateway_cert: api-koudaibook-cert
+      soa_gateway: www.xkoudai.com
+      soa_gateway_cert: www-default-secret
       soa_path: /simple-h5
       build_tag: build-${DRONE_BUILD_NUMBER}
 

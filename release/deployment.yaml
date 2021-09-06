@@ -28,7 +28,6 @@ spec:
       restartPolicy: Always
 
 
-
 ---
 apiVersion: v1
 kind: Service
@@ -41,15 +40,15 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: app-a{{.app_name}}
+    app: app-{{.app_name}}
 
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-{{.app_name}}
   annotations:
-    nginx.ingress.kubernetes.io/enable-cors: "true"
+    kubernetes.io/ingress.class: "traefik"
 spec:
   tls:
   - secretName: {{.soa_gateway_cert}}
@@ -59,8 +58,12 @@ spec:
     - host: {{.soa_gateway}}
       http:
         paths:
-          - path: /{{.app_name}}
+          - path: {{.path_name}}
             pathType: Prefix
             backend:
-              serviceName: service-{{.app_name}}
-              servicePort: 80
+              service:
+                name: service-{{.app_name}}
+                port:
+                  number: 80
+
+
