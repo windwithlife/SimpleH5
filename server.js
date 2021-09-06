@@ -43,6 +43,12 @@ app.prepare().then(() => {
             await app.render(ctx.req, ctx.res, '/signup', ctx.query);
             ctx.response = false;
         })
+        .get('/user', async (ctx, next) => {
+            ctx.response.status = 200
+            ctx.compress = true;
+            await app.render(ctx.req, ctx.res, '/user', ctx.query);
+            ctx.response = false;
+        })
 
     server
         .use(

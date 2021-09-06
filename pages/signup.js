@@ -2,9 +2,11 @@
  * 注册页面
  * r_gao@trip.com
  */
- import React, { 
-    useState 
-  } from 'react';
+import React, { 
+  useState 
+} from 'react';
+
+import Router from 'next/router'
   
 import {
   IconButton,
@@ -224,10 +226,11 @@ export default function Signup(props) {
       fetch({
         url: 'https://api.koudaibook.com/account-service/account/signup',
         data: {
-          name: username,
+          username: username,
           nickName: nickname,
           password: password.password,
-          phoneNumber: phone
+          phoneNumber: phone,
+          type: '0'
         }
       }).then((result) => {
         if (result?.status?.code == 200) {
@@ -236,7 +239,8 @@ export default function Signup(props) {
               variant: 'success',
               onExited: () => {
                 // 注册成功 跳转到登录页面重新登录
-                window.location.href = `${window.location.origin}/login`;
+                // window.location.href = `${window.location.origin}/login`;
+                Router.push('/login');
               }
             })
         } else {
