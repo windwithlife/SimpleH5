@@ -25,6 +25,12 @@ app.prepare().then(() => {
             await app.render(ctx.req, ctx.res, '/home', ctx.query);
             ctx.response = false;
         })
+        .get('/simple-h5', async (ctx, next) => {
+            ctx.response.status = 200
+            ctx.compress = true;
+            await app.render(ctx.req, ctx.res, '/home', ctx.query);
+            ctx.response = false;
+        })
         .get('/home', async (ctx, next) => {
             ctx.response.status = 200
             ctx.compress = true;
