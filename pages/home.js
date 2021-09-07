@@ -3,11 +3,7 @@
  * r_gao@trip.com
  */
 
-import React, { 
-  Component
-} from 'react';
-
-import Router from 'next/router'
+import React from 'react';
 
 import {
   Button,
@@ -19,6 +15,7 @@ import HomeHeader from '@components/home/header';
 import { makeStyles } from '@material-ui/core/styles'
 
 import fetch from '@utils/network'
+import router from '@utils/navigator'
 
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
@@ -51,11 +48,11 @@ export default function Home(props) {
   const styles = useStyles();
   // 处理跳转登录
   const handleJumpToLogin = () => {
-    Router.push('/login');
+    router.push('/login');
   }
   // 处理跳转用户
   const handleJumpToUser = () => {
-    Router.push('/user');
+    router.push('/user');
   }
   return (
     <div className={styles.homePage}>
@@ -64,7 +61,6 @@ export default function Home(props) {
         <Button onClick={ handleJumpToLogin }>跳转登录</Button>
         <Button onClick={ handleJumpToUser }>跳转用户</Button>
       </ButtonGroup>
-      
     </div>
   )
 }

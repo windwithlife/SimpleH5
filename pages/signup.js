@@ -5,8 +5,6 @@
 import React, { 
   useState 
 } from 'react';
-
-import Router from 'next/router'
   
 import {
   IconButton,
@@ -31,6 +29,7 @@ import { useSnackbar } from 'notistack';
 import { makeStyles } from '@material-ui/core/styles'
 
 import fetch from '@utils/network'
+import router from '@utils/navigator'
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
   signupHeader: {
@@ -142,7 +141,7 @@ export default function Signup(props) {
   const { enqueueSnackbar } = useSnackbar();
   // 处理页面返回
   const handlePageBack = () => {
-    window.history.back();
+    router.back();
   }
   // 处理用户名输入
   const handleUsernameChange = (prop) => (event) => {
@@ -240,7 +239,7 @@ export default function Signup(props) {
               onExited: () => {
                 // 注册成功 跳转到登录页面重新登录
                 // window.location.href = `${window.location.origin}/login`;
-                Router.push('/login');
+                router.push('/login');
               }
             })
         } else {

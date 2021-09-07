@@ -6,7 +6,11 @@ import React, {
   useState 
 } from 'react';
 
-import Router from 'next/router'
+import { 
+  parseCookies, 
+  setCookie, 
+  destroyCookie 
+} from 'nookies'
 
 import {
   IconButton,
@@ -37,6 +41,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { makeStyles } from '@material-ui/core/styles'
 
 import fetch from '@utils/network'
+import router from '@utils/navigator'
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
   loginHeader: {
@@ -119,7 +124,7 @@ export default function Login(props) {
   }
   // 处理页面返回
   const handlePageBack = () => {
-    window.history.back();
+    router.back();
   }
   // 处理用户名输入
   const handleUsernameChange = (prop) => (event) => {
@@ -171,7 +176,20 @@ export default function Login(props) {
         }
       }).then((result) => {
         if (result?.status?.code == 200) {
-          enqueueSnackbar('用户登录成功', { variant: 'success' })
+          enqueueSnackbar('用户登录成功', { 
+            variant: 'success',
+            onExited: () => {
+              // 登录成功 存储token到cookie 返回上一级页面
+              const parseCookie = parseCookies();
+              if (parseCookie?.token) {
+                destroyCookie({}, 'token')
+              }
+              setCookie({}, 'token', result?.data?.token, {
+                maxAge: 30 * 24 * 60 * 60
+              });
+              router.back();
+            }
+          })
         } else {
           enqueueSnackbar('用户登录失败', { variant: 'error' })
         }
@@ -182,8 +200,7 @@ export default function Login(props) {
   }
   // 处理注册按钮点击
   const handleSignupClick = () => {
-    // window.location.href = `${window.location.origin}/signup`;
-    Router.push('/signup');
+    router.push('/signup');
   }
   
   return (
