@@ -98,9 +98,9 @@ steps:
         from_secret: kubeconfig-uat
       app_name: simple-h5
       image_name: ccr.ccs.tencentyun.com/windwithlife/simple-h5
-      soa_gateway: m.xkoudai.com
-      soa_gateway_cert: m-default-secret
-      path_name: /simple-h5
+      soa_gateway: uat.m.zhangyongqiao.com
+      soa_gateway_cert: uat-m-default-secret
+      soa_path: /simple-h5
       build_tag: build-${DRONE_BUILD_NUMBER}
 
 volumes:
