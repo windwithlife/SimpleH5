@@ -2,9 +2,9 @@
  * 注册页面
  * r_gao@trip.com
  */
- import React, { 
-    useState 
-  } from 'react';
+import React, { 
+  useState 
+} from 'react';
   
 import {
   IconButton,
@@ -29,6 +29,7 @@ import { useSnackbar } from 'notistack';
 import { makeStyles } from '@material-ui/core/styles'
 
 import fetch from '@utils/network'
+import router from '@utils/navigator'
 // 样式表 material采用css-in-js
 const useStyles = makeStyles((theme) => ({
   signupHeader: {
@@ -140,7 +141,7 @@ export default function Signup(props) {
   const { enqueueSnackbar } = useSnackbar();
   // 处理页面返回
   const handlePageBack = () => {
-    window.history.back();
+    router.back();
   }
   // 处理用户名输入
   const handleUsernameChange = (prop) => (event) => {
@@ -224,10 +225,11 @@ export default function Signup(props) {
       fetch({
         url: 'https://api.koudaibook.com/account-service/account/signup',
         data: {
-          name: username,
+          username: username,
           nickName: nickname,
           password: password.password,
-          phoneNumber: phone
+          phoneNumber: phone,
+          type: '0'
         }
       }).then((result) => {
         if (result?.status?.code == 200) {
@@ -236,7 +238,8 @@ export default function Signup(props) {
               variant: 'success',
               onExited: () => {
                 // 注册成功 跳转到登录页面重新登录
-                window.location.href = `${window.location.origin}/login`;
+                // window.location.href = `${window.location.origin}/login`;
+                router.push('/login');
               }
             })
         } else {
